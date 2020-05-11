@@ -4,9 +4,11 @@ const checkStatus = (response) => {
       return response;
     }
     throw new Error('Request was either a 404 or 500');
-  }
-  const json = (response) => response.json()
-  class ToDoList extends React.Component {
+}
+
+const json = (response) => response.json();
+
+class ToDoList extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -16,6 +18,20 @@ const checkStatus = (response) => {
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    componentDidMount() {
+        fetch("https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=151")
+          .then(checkStatus)
+          .then(json)
+          .then((response) => {
+            console.log(response);
+            this.setState({tasks: response.tasks});
+          })
+          .catch(error => {
+            console.error(error.message);
+          })
+    }
+
     handleChange(event) {
       this.setState({ new_task: event.target.value });
     }
@@ -48,8 +64,9 @@ const checkStatus = (response) => {
         </div>
       )
     }
-  }
-  ReactDOM.render(
+}
+
+ReactDOM.render(
     <ToDoList />,
     document.getElementById('root')
-  );
+);
